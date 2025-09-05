@@ -1,12 +1,22 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UsersModule } from './users/users.module';
+import { User } from './users/user.entity';
+import { Organization } from './organizations/organization.entity';
+import { Product } from './products/product.entity';
+import { ProductImage } from './products/product-image.entity';
+import { Category } from './categories/category.entity';
+import { Cart } from './carts/cart.entity';
+import { CartItem } from './carts/cart-item.entity';
+import { Order } from './orders/order.entity';
+import { OrderItem } from './orders/order-item.entity';
+import { Payment } from './payments/payment.entity';
+import { Review } from './reviews/review.entity';
+import { AuditLog } from './audit/audit-log.entity';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }),
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -17,13 +27,37 @@ import { UsersModule } from './users/users.module';
         username: config.get('DB_USERNAME'),
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_NAME'),
-        autoLoadEntities: true,
+        entities: [
+          User,
+          Organization,
+          Product,
+          ProductImage,
+          Category,
+          Cart,
+          CartItem,
+          Order,
+          OrderItem,
+          Payment,
+          Review,
+          AuditLog,
+        ],
         synchronize: true,
       }),
     }),
-    UsersModule,
+    TypeOrmModule.forFeature([
+      User,
+      Organization,
+      Product,
+      ProductImage,
+      Category,
+      Cart,
+      CartItem,
+      Order,
+      OrderItem,
+      Payment,
+      Review,
+      AuditLog,
+    ]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

@@ -8,23 +8,33 @@ import { NotFoundException } from '@nestjs/common';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly repo: Repository<User>,
+    private usersRepository: Repository<User>,
   ) {}
 
-  findAll(): Promise<User[]> {
-    return this.repo.find();
+  async create(userData: Partial<User>): Promise<User> {
+    const user = this.usersRepository.create(userData);
+    return this.usersRepository.save(user);
   }
 
-  async findOne(id: number): Promise<User> {
-  const user = await this.repo.findOneBy({ id });
+  async findAll(): Promise<User[]> {
+    return this.usersRepository.find();
+  }
+
+  
+async findOne(id: number): Promise<User> {
+  const user = await this.usersRepository.findOneBy({ id });
   if (!user) {
     throw new NotFoundException(`User with id ${id} not found`);
   }
   return user;
 }
 
-  create(user: Partial<User>): Promise<User> {
-    const newUser = this.repo.create(user);
-    return this.repo.save(newUser);
+  async update(id: number, userData: Partial<User>): Promise<User> {
+    await this.usersRepository.update(id, userData);
+    return this.findOne(id);
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.usersRepository.delete(id);
   }
 }

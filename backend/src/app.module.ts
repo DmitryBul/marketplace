@@ -13,6 +13,7 @@ import { OrderItem } from './orders/order-item.entity';
 import { Payment } from './payments/payment.entity';
 import { Review } from './reviews/review.entity';
 import { AuditLog } from './audit/audit-log.entity';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { AuditLog } from './audit/audit-log.entity';
       Review,
       AuditLog,
     ]),
+    UsersModule,
   ],
 })
 export class AppModule {}
